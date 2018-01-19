@@ -1,0 +1,22 @@
+{
+    "name": "skymap/geocoding",
+    "description": "Geocoding google api",
+    "type": "metapackage",
+    "require": {
+        "google/apiclient": "^2.2",
+        "php": ">=5.3.0"
+    },
+    "license": "Skymap global",
+    "authors": [
+        {
+            "name": "tongdv",
+            "email": "tongdv@skymapglobal.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "skymap\\geocoding\\": "src/"
+        }
+    }
+}

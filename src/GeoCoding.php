@@ -1,15 +1,23 @@
 <?php
 
+namespace GeoCode;
+
 /**
  * Created by PhpStorm.
  * User: tong.dv
  * Date: 19/01/2018
  * Time: 23:16
  */
+
+use GeoCode\Exception\GeocodeException;
+use GeoCode\Transform\TransformAbstract;
+use GeoCode\Transform\TransformDefault;
+
 class GeoCoding
 {
     /** @var TransformAbstract */
     protected $transformer;
+
     /**
      * Search by type use google api
      *
@@ -28,8 +36,8 @@ class GeoCoding
 
         $key = config('geocode.google-key.place');
 
-        if(empty($key)){
-            throw new \GeoCode\Exception\GeocodeException('Null key google api');
+        if (empty($key)) {
+            throw new GeocodeException('Null key google api');
         }
 
         $googlePlacesApiParams = [
@@ -39,7 +47,7 @@ class GeoCoding
             'key' => 'key=' . $key
         ];
         // Optional parameters
-        if(isset($keyword)){
+        if (isset($keyword)) {
             $googlePlacesApiParams['keyword'] = 'keyword=' . $keyword;
         }
 
@@ -48,15 +56,36 @@ class GeoCoding
 
             if (!empty($data['results'])) {
                 foreach ($data['results'] as $item) {
-                    $transformedResult = $this->transformer->transform($item);
+                    $transformedResult = $this->getTransformer()
+                        ->transform($item);
                     if (!empty($transformedResult))
                         $result[] = $transformedResult;
                 }
             }
         } catch (\Exception $exception) {
-            $result = [];
+            throw new GeocodeException($exception->getMessage());
         }
 
         return $result;
+    }
+
+    /**
+     * @return TransformAbstract
+     */
+    public function getTransformer()
+    {
+        if (empty($this->transformer)) {
+            $this->transformer = new TransformDefault();
+        };
+
+        return $this->transformer;
+    }
+
+    /**
+     * @param TransformAbstract $transformer
+     */
+    public function setTransformer($transformer)
+    {
+        $this->transformer = $transformer;
     }
 }

@@ -1,4 +1,6 @@
 <?php
+
+namespace GeoCode\Transform;
 /**
  * Created by PhpStorm.
  * User: tong.dv
@@ -8,6 +10,18 @@
 
 abstract class TransformAbstract
 {
+    /**
+     * @var array
+     */
+    protected $filable;
+
+    /**
+     * @param array $filable
+     */
+    public function setFilable($filable)
+    {
+        $this->filable = $filable;
+    }
     /**
      * @param array $attribute
      *
